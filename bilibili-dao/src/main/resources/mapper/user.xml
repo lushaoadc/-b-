@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.immoc.bilibili.dao.UserDao">
+
+    <select id="getUserByPhone" parameterType="java.lang.String" resultType="com.immoc.bilibili.dao.domain.User">
+        select
+                *
+        from
+            bilibili.t_user
+        where
+            phone = #{phone}
+    </select>
+
+    <insert id = "addUser" parameterType="com.immoc.bilibili.dao.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            bilibili.t_user(id, phone, email, password, salt, createTime, updateTime)
+        values (
+            #{phone},
+            #{email},
+            #{password},
+            #{salt},
+            #{createTime}
+        )
+    </insert>
+    <insert id = "addUserInfo" parameterType="com.immoc.bilibili.dao.domain.Userinfo">
+        insert into
+            bilibili.t_user_info(id, userId, nick, avatar, sign, gender, birth, createTime, updateTime)
+        values (
+                   #{id},
+                   #{userId},
+                   #{nick},
+                   #{avatar},
+                   #{sign},
+                    #{gender},
+                #{birth},
+                #{createTime},
+                #{updateTime}
+               )
+    </insert>
+    <select id="getUserById" parameterType="java.lang.Long" resultType="com.immoc.bilibili.dao.domain.User">
+        select *
+        from bilibili.t_user
+        where id = #{id}
+    </select>
+    <select id="getUserInfoByUserId" parameterType="java.lang.Long" resultType="com.immoc.bilibili.dao.domain.UserInfo">
+        select *
+        from bilibili.t_user_info
+        where userId = #{userid}
+    </select>
+</mapper>
