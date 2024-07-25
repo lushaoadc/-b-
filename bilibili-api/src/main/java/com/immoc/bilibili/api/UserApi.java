@@ -1,16 +1,17 @@
 package com.immoc.bilibili.api;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.immoc.bilibili.api.support.UserSupport;
 import com.immoc.bilibili.dao.domain.JsonResponse;
+import com.immoc.bilibili.dao.domain.PageResult;
 import com.immoc.bilibili.dao.domain.User;
+import com.immoc.bilibili.dao.domain.UserInfo;
+import com.immoc.bilibili.service.UserFollowingService;
 import com.immoc.bilibili.service.UserService;
 import com.immoc.bilibili.service.util.RSAUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +23,8 @@ public class UserApi {
 
     @Autowired
     private UserSupport userSupport;
+    @Autowired
+    private UserFollowingService userFollowingService;
 
     @GetMapping("/users")
     public JsonResponse<User> getUserInfo() {
@@ -46,5 +49,36 @@ public class UserApi {
     public JsonResponse<String> login(@RequestBody User user) throws Exception{
         String token = userService.login(user);
         return new JsonResponse<>(token);
+    }
+
+    @PutMapping("/users")
+    public JsonResponse<String> updateUser(@RequestBody User user) throws Exception{
+        Long userId = userSupport.getCurrentUserId();
+        user.setId(userId);
+        userService.updateUsers(user);
+        return JsonResponse.success();
+    }
+
+    @PutMapping("/user-infos")
+    public JsonResponse<String> updateUserInfos(@RequestBody UserInfo userInfo) throws Exception{
+        Long userId = userSupport.getCurrentUserId();
+        userInfo.setUserId(userId);
+        userService.updateUserInfos(userInfo);
+        return JsonResponse.success();
+    }
+    @GetMapping("/user-infos")
+    public JsonResponse<PageResult<UserInfo>> pageListUserInfos(@RequestParam Integer no, Integer size, String nick){
+        Long userId = userSupport.getCurrentUserId();
+        JSONObject params = new JSONObject();
+        params.put("no", no);
+        params.put("size", size);
+        params.put("nick", nick);
+        params.put("userId", userId);
+        PageResult<UserInfo> result = userService.pageListUserInfos(params);
+        if (result.getTotal() > 0){
+            List<UserInfo> checkedUserInfoList = userFollowingService.checkFollowingStatus(result.getList(), userId);
+            result.setList(checkedUserInfoList);
+        }
+        return new JsonResponse<>(result);
     }
 }

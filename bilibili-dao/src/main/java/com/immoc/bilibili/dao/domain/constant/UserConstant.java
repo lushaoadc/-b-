@@ -15,4 +15,10 @@ public interface UserConstant
         public static final Date DEFAULT_BIRTH = new Date();
 
         public static final String DEFAULT_NICK = "MAN";
+
+        public static final String USER_FOLLOWING_GROUP_TYPE_DEFAULT = "2";
+
+        public static final String USER_FOLLOWING_GROUP_ALL_NAME = "全部关注";
+
+        public static final String USER_FOLLOWING_GROUP_TYPE_USER = "3";
 }
