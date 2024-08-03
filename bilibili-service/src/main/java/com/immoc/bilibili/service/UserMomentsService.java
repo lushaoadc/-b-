@@ -31,16 +31,16 @@ public class UserMomentsService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public void addUserMoments(UserMoment userMoment) throws Exception{
+    public void addUserMoments(UserMoment userMoment) throws Exception {
         userMoment.setCreateTime(new Date());
         userMomentsDao.addUserMoments(userMoment);
-        DefaultMQProducer producer= (DefaultMQProducer) applicationContext.getBean("momentsProducer");
+        DefaultMQProducer producer = (DefaultMQProducer)applicationContext.getBean("momentsProducer");
         Message msg = new Message(UserMomentsConstant.TOPIC_MOMENTS, JSONObject.toJSONString(userMoment).getBytes(StandardCharsets.UTF_8));
         RocketMQUtil.syncSendMsg(producer, msg);
     }
 
     public List<UserMoment> getUserSubscribedMoments(Long userId) {
-        String key = "subscribed" + userId;
+        String key = "subscribed-" + userId;
         String listStr = (String) redisTemplate.opsForValue().get(key);
         return JSONArray.parseArray(listStr, UserMoment.class);
     }

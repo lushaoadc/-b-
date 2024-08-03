@@ -49,7 +49,11 @@ public class UserFollowing {
     }
 
     public Long getGroupId() {
-        return groupId;
+        if (groupId == null)
+            return null;
+        else {
+            return groupId;
+        }
     }
 
     public void setGroupId(Long groupId) {

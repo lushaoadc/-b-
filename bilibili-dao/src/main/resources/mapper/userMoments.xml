@@ -6,7 +6,7 @@
         insert into
             bilibili.t_user_moments(
                     userId,
-                    'type',
+                    type,
                     contentId,
                     createTime
         )values (
