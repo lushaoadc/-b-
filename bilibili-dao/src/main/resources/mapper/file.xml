@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.immoc.bilibili.dao.FileDao">
+
+    <insert id="addFile" parameterType="com.immoc.bilibili.dao.domain.File">
+        insert into
+            bilibili.t_file(
+                url,
+                `type`,
+                md5,
+                createTime
+            )value(
+                #{url},
+                #{type},
+                #{md5},
+                #{createTime}
+            )
+    </insert>
+
+    <select id="getFileByMD5" parameterType="java.lang.String" resultType="com.immoc.bilibili.dao.domain.File">
+        select
+            *
+        from
+            bilibili.t_file
+        where
+            md5 = #{md5}
+    </select>
+
+</mapper>
