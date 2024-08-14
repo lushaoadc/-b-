@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.immoc.bilibili.api.support.UserSupport;
 import com.immoc.bilibili.dao.domain.*;
-import com.immoc.bilibili.service.ElasticSearchService;
 import com.immoc.bilibili.service.VideoService;
 import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,6 @@ public class VideoApi {
     @Autowired
     private UserSupport userSupport;
 
-    @Autowired
-    private ElasticSearchService elasticSearchService;
 
     /**
      * 视频投稿
@@ -36,7 +33,6 @@ public class VideoApi {
         video.setUserId(userId);
         videoService.addVideos(video);
         //在es中添加一条视频数据
-        elasticSearchService.addVideo(video);
         return JsonResponse.success();
     }
 
